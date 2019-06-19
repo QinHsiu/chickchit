@@ -1,9 +1,13 @@
 #ifndef UDPCLIENT_H
 #define UDPCLIENT_H
-
 #include<QObject>
 #include<QUdpSocket>
 #include<QList>
+#include<FelgoApplication>
+#include<QJsonDocument>
+#include<QJsonArray>
+#include<QJsonObject>
+#include<QJsonValue>
 #include<QTcpServer>
 #include<QTcpSocket>
 //#include<QFile>
@@ -21,12 +25,13 @@ public:
                 enum MsgType{Msg, UsrEnter, UsrLeft, FileName, Refuse};
     Q_INVOKABLE void test();
     //Q_INVOKABLE void socketSetting();
-    Q_INVOKABLE void setName(QString nekename);
+    Q_INVOKABLE void setName(QJsonValue nekename);
+    Q_INVOKABLE void setPsword(QJsonValue password);
     //Q_INVOKABLE void UsrEnter(QString usrName, QString ipAddr);
    // Q_INVOKABLE void usrLeft(QString usrName, QString time);
     Q_INVOKABLE void sndMsg(MsgType type,QString msg);
     Q_INVOKABLE QString getIP();
-    Q_INVOKABLE QString getUsr();
+    Q_INVOKABLE QJsonValue getUsr();
    // Q_INVOKABLE QString getMsg(QString msg);
 protected:
    // QString name() const{return u_name;}
@@ -34,7 +39,7 @@ protected:
 private:
     QUdpSocket *udpSocket;
     qint16 port;
-    QString u_name;
+    QJsonValue u_name;
     QString u_ipAddr;
 signals:
     void nameChanged();
@@ -44,6 +49,5 @@ signals:
 private slots:
     void processPendingDatagrams();
 };
-
 
 #endif // UDPCLIENT_H

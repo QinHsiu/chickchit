@@ -1,36 +1,23 @@
-import QtQuick 2.6
-import QtQuick.Controls 2.2
-import QtQuick.Controls.Material 2.2
+import QtQuick 2.12
+import Felgo 3.0
+import QtQuick.Controls 2.5
+import QtQuick.Controls.Material 2.3
 import client 1.0
-Item {
+
+
+Page{
     id:chatCom
+    property string username
+    property string password
     anchors.fill: parent
-   // visible: true
-   // property alias theModel: charView.model
-   // property alias friendName: username.text
-   // property string frindIpv4: ""
     property var newMsgs: []
     UdpClient{
         id:client
-    }
-    /*Component.onCompleted: {
-        onUpdateChatView.connect(toEnd);
-        function toEnd(){
-            charView.positionViewAtEnd();
-        }
-    }*/
-
-    Rectangle{
-        id: rectangle
-        anchors.fill: parent
-        color: "white"
-        z:-1
     }
     Column{
         spacing: 4
         anchors.fill:parent
         Rectangle{
-
             height: 100
             width: parent.width
             Button{
@@ -39,44 +26,33 @@ Item {
                 anchors.leftMargin: 10
                 text: "back"
                 onClicked: {
-                    //新消息显示为0(函数在c++中定义)
-                   // clearNewMsgCount(index);
                     chatCom.visible=false;
                     chatCom.destroy();
                 }
             }
-            /*Label{
-                id:roomName;
-                Label.text: chicks
-                anchors.centerIn: parent
-                font.pointSize: 20
-            }*/
             Button{
-                anchors.verticalCenter: parent.verticalCenter
+                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 text:"clear"
                 onClicked: {
-                    //chatCom.visible=false;
-                    //chatModel.clear();
+                    console.log("US")
+                    console.log(username)
                 }
                 Material.background: Material.Red
             }
         }
         ListView{
             spacing: 8
-            //chat record
             id:charView
             model: 1
             height: 400
             clip: true;
             width: parent.width
             delegate: chatDelegate
-
             Component.onCompleted: {
                 positionViewAtEnd();
             }
-
             Component{
                 id:chatDelegate
 
@@ -87,26 +63,14 @@ Item {
                     height: childrenRect.height
                     Text {
                         id:textContent
-                        //text: "hello"
                         color: "black"
-                        //text: newMsgs.text
                         width: parent.width-40
                         font.pointSize: 13
                         wrapMode: Text.WrapAnywhere
-                        /*Component.onCompleted: {
-                            if(direction==true){
-                                //是我发送的文字
-                                textContent.horizontalAlignment=Text.AlignRight;
-                                textContent.anchors.right=parent.right
-                            }
-                        }*/
                         Connections{
                             target: client
                                   onSignalMsg: {
                                       textContent.text=ipAddr
-                                      //usrname.text=msg
-                                      newMsgs = newMsgs.concat({text: msg, ip: ipAddr, msg_user_name: usrName})
-                                      //console.debug("success");
                         }
                         }
 
@@ -139,24 +103,18 @@ Item {
                         send_content.focus=true;
                         return;
                     }
-                    //chatModel.pushBack(send_content.text,true);//add to model
-                    //var type=2;
-                    //if(frindIpv4+friendName.text===friendName.text){
-                        //robot
-                        //type=5;
-                    //}
-                    //getMsg(send_content.text);
+
                     var type = 0
                     client.sndMsg(client.Msg,send_content.text);//send
                     send_content.text="";
                     send_content.focus=true;
-                    //charView.positionViewAtEnd();
+
                 }
             }
         }
 
         Row{
-            //function area
+
             anchors.horizontalCenter: parent.horizontalCenter
             Button{
                 id:sendFile
@@ -182,5 +140,6 @@ Item {
        }
     }
 }
+
 
 

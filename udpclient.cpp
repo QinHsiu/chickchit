@@ -1,4 +1,5 @@
 #include "udpclient.h"
+#include <FelgoApplication>
 #include <QUdpSocket>
 #include <QHostInfo>
 #include <QDateTime>
@@ -6,6 +7,7 @@
 #include <QProcess>
 #include <iostream>
 #include <QDebug>
+#include <QString>
 #include <QVector>
 
 UdpClient::UdpClient(QObject *parent)
@@ -42,12 +44,40 @@ void UdpClient::test()
 
     //sndMsg(UsrEnter);
 }*/
-void UdpClient::setName(QString nekename)
+void UdpClient::setName(QJsonValue nekename)
 {
-    u_name = nekename;
-    qDebug()<<u_name<<"set";
+    if(nekename.isObject())
+    {
+        QJsonObject nameobj=nekename.toObject();
+        QString strname=nameobj.value("name").toString();
+        QString strPwd=nameobj.value("passwd").toString();
+    }
+    QJsonObject j;
+    j.insert("name",nekename);
+    QJsonDocument o;
+    o.setObject(j);
+    QTextStream(stdout)<<o.toJson();
+    QTextStream(stdout)<<o.toJson(QJsonDocument::Compact);
+    //u_name = nekename;
+    //qDebug()<<u_name<<"set";
 }
-
+void UdpClient::setPsword(QJsonValue password)
+{
+    if(password.isObject())
+    {
+        QJsonObject nameobj=password.toObject();
+        QString strname=nameobj.value("name").toString();
+        QString strPwd=nameobj.value("passwd").toString();
+    }
+    QJsonObject j;
+    j.insert("password",password);
+    QJsonDocument o;
+    o.setObject(j);
+    QTextStream(stdout)<<o.toJson();
+    QTextStream(stdout)<<o.toJson(QJsonDocument::Compact);
+    //u_name = nekename;
+    //qDebug()<<u_name<<"set";
+}
 /*void UdpClient::UsrEnter(QString usrName, QString ipAddr)
 {
     //UdpClient::sndMsg(UsrEnter);
@@ -124,13 +154,12 @@ void UdpClient::processPendingDatagrams()
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-ddhh:mm:ss");
         std::string usr, addr, message;
 
-        QString a ="jack";
-        QString b ="198.0.0";
-        QString c ="hello";
+
 
         switch (msgType) {
         case Msg:
             in >> usrName >> ipAddr >> msg;
+           // qDebug()<<usrName<<ipAddr<<msg;
 
             emit signalMsg(usrName,msg,ipAddr);
             break;
@@ -160,7 +189,7 @@ QString UdpClient::getIP()
     }
     return 0;
 }
-QString UdpClient::getUsr()
+QJsonValue UdpClient::getUsr()
 {
     return u_name;
 
